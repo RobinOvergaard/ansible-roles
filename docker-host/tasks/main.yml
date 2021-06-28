@@ -7,9 +7,6 @@
   vars:
     packages:
     - apt-transport-https
-    - curl
-    - ntp
-    - open-iscsi
 
 - name: Install docker sdk for python3
   pip:
