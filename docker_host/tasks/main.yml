@@ -1,0 +1,51 @@
+---
+- name: Install package
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: true
+  vars:
+    packages:
+    - apt-transport-https
+
+- name: Install docker sdk for python3
+  pip:
+    name: docker
+
+- name: Add docker repo key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add docker repo
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ansible_lsb.codename}} stable
+    state: present
+
+- name: Install docker packages
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: true
+  vars:
+    packages:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+
+- name: Removing swap mount
+  mount:
+    name: "{{ mounts }}"
+    fstype: swap
+    state: absent
+  vars:
+    mounts:
+    - swap
+    - none
+
+- name: Adding user zen to group docker
+  user:
+    name: zen
+    groups: [docker]
+    append: yes
+  become: yes
