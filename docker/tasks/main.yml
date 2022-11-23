@@ -1,47 +1,47 @@
 ---
 - name: Install package
-  apt:
+  ansible.builtin.apt:
     name: "{{ packages }}"
     state: present
     update_cache: true
   vars:
     packages:
-    - apt-transport-https
+      - apt-transport-https
 
 - name: Add docker repo key
-  apt_key:
+  ansible.builtin.apt_key:
     url: https://download.docker.com/linux/ubuntu/gpg
     state: present
 
 - name: Add docker repo
-  apt_repository:
-    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ansible_lsb.codename}} stable
+  ansible.builtin.apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable
     state: present
 
 - name: Install docker packages
-  apt:
+  ansible.builtin.apt:
     name: "{{ packages }}"
     state: present
     update_cache: true
   vars:
     packages:
-    - docker-ce
-    - docker-ce-cli
-    - containerd.io
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
 
 - name: Removing swap mount
-  mount:
+  ansible.posix.mount:
     name: "{{ mounts }}"
     fstype: swap
     state: absent
   vars:
     mounts:
-    - swap
-    - none
+      - swap
+      - none
 
 - name: Adding user zen to group docker
-  user:
+  ansible.builtin.user:
     name: zen
     groups: [docker]
-    append: yes
-  become: yes
+    append: true
+  become: true
