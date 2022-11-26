@@ -1,0 +1,8 @@
+---
+- name: Ensuring cache is fully updated
+  ansible.builtin.apt:
+    update_cache: true
+
+- name: Ensuring updated packages are installed
+  ansible.builtin.apt:
+    upgrade: full
